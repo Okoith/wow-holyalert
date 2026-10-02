@@ -1,0 +1,21 @@
+## Interface: 120100
+## Title: HolyAlert
+## Notes: Plays a sound when Divine Arbiter makes Divine Storm or Final Verdict glow (Retribution Paladin).
+## Notes-deDE: Spielt einen Sound, sobald Göttlicher Richter Göttlicher Sturm oder Letztes Urteil aufleuchten lässt (Paladin Vergeltung).
+## IconTexture: Interface\AddOns\HolyAlert\media\icon.png
+## Author: Dominique
+## Version: @project-version@
+## SavedVariables: HolyAlertDB, HolyAlertDebugLog
+## X-License: MIT
+## X-Curse-Project-ID: 1721994
+
+embeds.xml
+
+Locales\enUS.lua
+Locales\deDE.lua
+
+Debug.lua
+Sounds.lua
+Alerts.lua
+Options.lua
+Core.lua
