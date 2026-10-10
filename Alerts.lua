@@ -16,6 +16,7 @@ local issecret = issecretvalue or function() return false end
 Alerts.DIVINE_STORM_ID = 53385       -- Göttlicher Sturm
 Alerts.FINAL_VERDICT_ID = 383328     -- Letztes Urteil
 Alerts.TEMPLARS_VERDICT_ID = 85256   -- Urteil des Templers (Basis-ID, leuchtet mit 383328 zusammen)
+Alerts.BLADE_OF_JUSTICE_ID = 184575  -- Klinge der Gerechtigkeit, Leuchten nach Proc (SPEC 3.4)
 Alerts.RETRIBUTION_SPEC_ID = 70      -- im Test bestätigt (SPEC 3.3)
 
 Alerts.LOCKOUT = 2             -- Sekunden Sperre pro Alarm (SPEC 3.1)
@@ -26,19 +27,23 @@ Alerts.BY_GLOW = {
   [Alerts.DIVINE_STORM_ID] = "storm",
   [Alerts.FINAL_VERDICT_ID] = "verdict",
   [Alerts.TEMPLARS_VERDICT_ID] = "verdict",
+  [Alerts.BLADE_OF_JUSTICE_ID] = "blade",
 }
+-- Alarme mit Kopplung an den Gegenzauber (SPEC 3.2). Für "blade" gilt judgeOnly nicht (SPEC 3.4).
+Alerts.COUPLED = { storm = true, verdict = true }
 -- Eigener Cast (Gegenzauber) -> Alarm, den er auslöst: Urteil -> Sturm leuchtet, Sturm -> Urteil
 Alerts.BY_CAST = {
   [Alerts.FINAL_VERDICT_ID] = "storm",
   [Alerts.TEMPLARS_VERDICT_ID] = "storm",
   [Alerts.DIVINE_STORM_ID] = "verdict",
 }
-Alerts.ORDER = { "storm", "verdict" }
+Alerts.ORDER = { "storm", "verdict", "blade" }
 
 Alerts.active = false
 local lastPlayed = {}    -- Alarm -> GetTime() des letzten Abspielens
 local lastCounter = {}   -- Alarm -> { t = GetTime(), spellID = ... } des letzten passenden Gegenzaubers
 local pending = {}       -- Alarm -> { t = GetTime(), spellID = ... }: Leuchten kam vor dem Gegenzauber
+local lastBladeCast      -- GetTime() des letzten eigenen Casts von 184575, nur fürs Debug-Log
 
 -- Abstand in Sekunden, auf 1/1000 gerundet (fürs Log)
 local function round(v)
@@ -181,6 +186,7 @@ local function logDecision(alert, spellID, decision, reason, delta, counterID)
   ns.Debug:Add("decision", {
     alert = alert, spellID = spellID, decision = decision, reason = reason,
     delta = round(delta), counterID = counterID,
+    coupled = Alerts.COUPLED[alert] == true,
     judgeOnly = ns.db.profile.judgeOnly, window = Alerts.COUPLING_WINDOW,
   })
 end
@@ -223,7 +229,8 @@ function Alerts:OnGlowShow(spellID)
   end
   local alert = self.BY_GLOW[spellID]
   if ns.Debug:IsEnabled() then
-    ns.Debug:Add("glowShow", { spellID = spellID, name = self:SpellName(spellID), alert = alert })
+    ns.Debug:Add("glowShow", { spellID = spellID, name = self:SpellName(spellID), alert = alert,
+      sinceBladeCast = alert == "blade" and lastBladeCast and round(now() - lastBladeCast) or nil })
   end
   if not alert then return end
 
@@ -239,7 +246,8 @@ function Alerts:OnGlowShow(spellID)
     return
   end
 
-  if not ns.db.profile.judgeOnly then
+  -- Ohne Kopplung: Option aus oder Alarm ohne Gegenzauber (Klinge der Gerechtigkeit, SPEC 3.4)
+  if not ns.db.profile.judgeOnly or not self.COUPLED[alert] then
     fire(alert, spellID, delta, counterID)
     return
   end
@@ -274,7 +282,9 @@ function Alerts:OnGlowHide(spellID)
     ns.Debug:Add("glowHide", { spellID = spellID })
     return
   end
-  ns.Debug:Add("glowHide", { spellID = spellID, name = self:SpellName(spellID), alert = self.BY_GLOW[spellID] })
+  local alert = self.BY_GLOW[spellID]
+  ns.Debug:Add("glowHide", { spellID = spellID, name = self:SpellName(spellID), alert = alert,
+    sinceBladeCast = alert == "blade" and lastBladeCast and round(now() - lastBladeCast) or nil })
 end
 
 ---------------------------------------------------------------------------
@@ -293,6 +303,15 @@ function Alerts:OnPlayerSpell(unit, spellID)
     end
     return
   end
+  -- Klinge der Gerechtigkeit: nur loggen, damit sich Leuchten und Cast vergleichen lassen (SPEC 3.4)
+  if spellID == self.BLADE_OF_JUSTICE_ID then
+    lastBladeCast = now()
+    if ns.Debug:IsEnabled() then
+      ns.Debug:Add("cast", { spellID = spellID, name = self:SpellName(spellID), alert = "blade" })
+    end
+    return
+  end
+
   local alert = self.BY_CAST[spellID]
   if not alert then return end
 
@@ -322,8 +341,8 @@ function Alerts:OnPlayerSpell(unit, spellID)
 end
 
 ---------------------------------------------------------------------------
--- Test: spielt einen oder beide Alarme, unabhängig von an/aus, Kampf, Kopplung und Sperre.
--- Beide nacheinander, damit sie sich nicht überlagern.
+-- Test: spielt einen oder alle Alarme, unabhängig von an/aus, Kampf, Kopplung und Sperre.
+-- Alle nacheinander, damit sie sich nicht überlagern.
 ---------------------------------------------------------------------------
 
 local TEST_GAP = 2

@@ -28,6 +28,8 @@ Sounds.BUNDLED = {
   { id = "storm_de", file = "storm_de.ogg", label = "SOUND_STORM_DE", lsm = "HolyAlert: Divine Storm (DE)" },
   { id = "verdict_en", file = "verdict_en.ogg", label = "SOUND_VERDICT_EN", lsm = "HolyAlert: Final Verdict (EN)" },
   { id = "verdict_de", file = "verdict_de.ogg", label = "SOUND_VERDICT_DE", lsm = "HolyAlert: Final Verdict (DE)" },
+  { id = "blade_en", file = "blade_en.ogg", label = "SOUND_BLADE_EN", lsm = "HolyAlert: Blade of Justice (EN)" },
+  { id = "blade_de", file = "blade_de.ogg", label = "SOUND_BLADE_DE", lsm = "HolyAlert: Blade of Justice (DE)" },
 }
 local bundledByID, ownLSMNames = {}, {}
 for _, s in ipairs(Sounds.BUNDLED) do
@@ -55,6 +57,7 @@ local lang = (okLocale and locale == "deDE") and "de" or "en"
 Sounds.DEFAULTS = {
   storm = "addon:storm_" .. lang,
   verdict = "addon:verdict_" .. lang,
+  blade = "addon:blade_" .. lang,
 }
 
 ---------------------------------------------------------------------------
