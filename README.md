@@ -7,12 +7,14 @@ World of Warcraft addon (Retail 12.1, Midnight) for **Retribution Paladins**. Wh
 - **Divine Storm** – use it now (lights up after you cast Final Verdict), and
 - **Final Verdict** – use it now (lights up after you cast Divine Storm).
 
-The buff runs out after a few seconds, so the glowing ability has to be used before then. Sound only, nothing is shown on the screen.
+Optionally (off by default), HolyAlert also plays a sound when **Blade of Justice** becomes available again through a proc, for example Art of War, and starts to glow.
+
+The Divine Arbiter buff runs out after a few seconds, so the glowing ability has to be used before then. Sound only, nothing is shown on the screen.
 
 ## Features
 
-- **Two alerts** with their own sound, each can be turned on or off
-- **Only with Divine Arbiter** (on by default): ignores glows that do not come from the set bonus, for example Final Verdict lighting up at the start of a fight
+- **Three alerts** with their own sound, each can be turned on or off: Divine Storm, Final Verdict and Blade of Justice (off by default)
+- **Only with Divine Arbiter** (on by default): ignores Divine Storm and Final Verdict glows that do not come from the set bonus, for example Final Verdict lighting up at the start of a fight
 - **Bundled voice alerts** in English and German; the default follows your client language (German client: German voice, otherwise English)
 - **Your own sounds:** up to five files in a separate folder that survives addon updates
 - **LibSharedMedia:** every sound registered by other addons can be used, and HolyAlert's own sounds are registered there for other addons
@@ -36,8 +38,8 @@ The zip contains all required libraries. A plain copy of the repository does **n
 Type `/holyalert` (or `/ha`, if no other addon uses it) or open *Settings > AddOns > HolyAlert*. Changes apply immediately.
 
 - **Status line** at the top: shows the detected specialization, or a note that HolyAlert is inactive on this character (not a Retribution Paladin).
-- **Divine Storm** and **Final Verdict:** turn the alert on or off, choose its sound, *Test* button.
-- **General:** only with Divine Arbiter, sound channel, only in combat, chat messages, *Test both* button.
+- **Divine Storm**, **Final Verdict** and **Blade of Justice:** turn the alert on or off, choose its sound, *Test* button. Blade of Justice is off by default.
+- **General:** only with Divine Arbiter, sound channel, only in combat, chat messages, *Test all* button.
 - **Custom sounds:** where to put your own files (see below).
 - **Debug:** debug mode and *Clear log*.
 
@@ -55,11 +57,11 @@ The sound list contains, in this order: the bundled HolyAlert sounds, your own s
 | `/ha` | Short form of `/holyalert`, only if no other addon uses `/ha` |
 | `/holyalert help` | List the commands |
 | `/holyalert status` | Show whether HolyAlert is active and the current settings |
-| `/holyalert test [storm\|verdict]` | Play both alerts one after the other (or only one) |
+| `/holyalert test [storm\|verdict\|blade]` | Play all alerts one after the other (or only one) |
 | `/holyalert sounds` | List all available sounds with their numbers |
-| `/holyalert sound storm\|verdict <number>` | Choose a sound from the list; `default` restores the default |
-| `/holyalert toggle storm\|verdict` | Turn an alert on or off |
-| `/holyalert judge on\|off` | Only with Divine Arbiter |
+| `/holyalert sound storm\|verdict\|blade <number>` | Choose a sound from the list; `default` restores the default |
+| `/holyalert toggle storm\|verdict\|blade` | Turn an alert on or off |
+| `/holyalert judge on\|off` | Only with Divine Arbiter (Divine Storm and Final Verdict) |
 | `/holyalert channel master\|sfx\|dialog\|music\|ambience` | Sound channel |
 | `/holyalert combat on\|off` | Only play alerts in combat |
 | `/holyalert debug on\|off\|clear\|status` | Debug log (`HolyAlertDebugLog` in SavedVariables, off by default) |
@@ -83,10 +85,13 @@ HolyAlert listens to the spell activation glow of the game (`SPELL_ACTIVATION_OV
 |---|---|---|
 | Divine Storm | 53385 | Final Verdict 383328 or Templar's Verdict 85256 |
 | Final Verdict | 383328 or 85256 (both glow together, one sound) | Divine Storm 53385 |
+| Blade of Justice | 184575 | none |
 
 A sound is played only when the glow appears, not when it disappears. Each alert is blocked for 2 seconds after it played.
 
 **Only with Divine Arbiter:** the Divine Arbiter buff cannot be read in combat. In game tests the glow always appeared in the same frame as your own cast of the other ability (`UNIT_SPELLCAST_SUCCEEDED`). With this option on, HolyAlert only plays when the two events are at most 0.3 seconds apart, in either order. Glows without that cast, such as Final Verdict lighting up together with Avenging Wrath at the start of a fight, stay silent. With the option off, every matching glow plays.
+
+**Blade of Justice** is not coupled to another cast: the talents Art of War (auto attacks) and Righteous Cause (spending Holy Power) reset its cooldown, and the game then lights it up. HolyAlert plays as soon as the glow appears; "Only with Divine Arbiter" does not apply. Glows with two charges (Improved Blade of Justice) and with Righteous Cause have not been tested in game yet.
 
 The spell IDs and the timing were worked out in game with a test addon (`docs/reference/GlowTest.lua`).
 

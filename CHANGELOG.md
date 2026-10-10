@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0
+
+- **New alert: Blade of Justice** (off by default). Plays a sound when Blade of Justice (spell 184575) becomes available again through a proc, for example Art of War, and starts to glow. Only when the glow appears, with a 2-second block. "Only with Divine Arbiter" does not apply to this alert.
+- Bundled English and German voice alerts for Blade of Justice, also registered with LibSharedMedia.
+- Settings: new group *Blade of Justice* with on/off, sound and *Test*. *Test both* is now *Test all*. The tooltip of "Only with Divine Arbiter" says that it only applies to Divine Storm and Final Verdict.
+- Chat commands `test`, `sound` and `toggle` accept `blade`.
+- Debug log: your own Blade of Justice casts and the time since the last cast on each glow.
+
 ## 1.0.0-beta.1
 
 First test build.

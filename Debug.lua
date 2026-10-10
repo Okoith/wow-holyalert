@@ -107,6 +107,8 @@ function Debug:LogMeta()
     stormSound = p.alerts.storm.sound,
     verdictEnabled = p.alerts.verdict.enabled,
     verdictSound = p.alerts.verdict.sound,
+    bladeEnabled = p.alerts.blade.enabled,
+    bladeSound = p.alerts.blade.sound,
     judgeOnly = p.judgeOnly,
     couplingWindow = Alerts.COUPLING_WINDOW,
     lockout = Alerts.LOCKOUT,

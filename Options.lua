@@ -58,10 +58,13 @@ local function soundValues(alert)
   return values, sorting
 end
 
-local function soundGroup(alert, order)
+local function soundGroup(alert, order, note)
   return {
     type = "group", order = order, inline = true, name = L["ALERT_" .. alert],
     args = {
+      note = note and {
+        type = "description", order = 0, width = "full", name = note,
+      } or nil,
       enabled = {
         type = "toggle", order = 1, name = L["OPT_ENABLED"],
         arg = { "alerts", alert, "enabled" }, get = get, set = set,
@@ -109,6 +112,7 @@ local function buildOptions()
 
       storm = soundGroup("storm", 10),
       verdict = soundGroup("verdict", 20),
+      blade = soundGroup("blade", 25, L["OPT_BLADE_NOTE"]),
 
       general = {
         type = "group", order = 30, inline = true, name = L["OPT_GENERAL"],
@@ -130,8 +134,8 @@ local function buildOptions()
             type = "toggle", order = 3, name = L["OPT_CHAT"], desc = L["OPT_CHAT_DESC"],
             arg = { "chatMessages" }, get = get, set = set,
           },
-          testBoth = {
-            type = "execute", order = 4, name = L["OPT_TEST_BOTH"],
+          testAll = {
+            type = "execute", order = 4, name = L["OPT_TEST_ALL"],
             func = function() ns.Alerts:Test() end,
           },
         },

@@ -17,6 +17,8 @@ ns.defaults = {
     alerts = {
       storm = { enabled = true, sound = ns.Sounds.DEFAULTS.storm },     -- Standard je nach Client-Sprache
       verdict = { enabled = true, sound = ns.Sounds.DEFAULTS.verdict },
+      -- Standard aus (SPEC 3.4). Bestehende Profile bekommen den Eintrag über die AceDB-Defaults.
+      blade = { enabled = false, sound = ns.Sounds.DEFAULTS.blade },
     },
     judgeOnly = true,       -- Nur bei Göttlicher Richter (SPEC 3.2)
     channel = "Master",
@@ -156,7 +158,7 @@ end
 -- Slash-Befehle (SPEC 5). /holyalert ohne Argument öffnet das Menü.
 ---------------------------------------------------------------------------
 
-local ALERTS = { storm = true, verdict = true }
+local ALERTS = { storm = true, verdict = true, blade = true }
 
 local function onOff(value)
   return value and L["ON"] or L["OFF"]
