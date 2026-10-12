@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1
+
+- Compatible with patch 12.1.5 (Interface 120105)
+- The addon version is shown in the settings
+
 ## 1.1.0
 
 - **New alert: Blade of Justice** (off by default). Plays a sound when Blade of Justice (spell 184575) becomes available again through a proc, for example Art of War, and starts to glow. Only when the glow appears, with a 2-second block. "Only with Divine Arbiter" does not apply to this alert.

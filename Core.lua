@@ -5,11 +5,13 @@ local L = ns.L
 
 local issecret = issecretvalue or function() return false end
 
+-- Version zur Laufzeit aus der TOC lesen (nie hart kodieren), Fallback "?"
 do
-  local ok, version = pcall(function()
-    return C_AddOns and C_AddOns.GetAddOnMetadata and C_AddOns.GetAddOnMetadata(ADDON_NAME, "Version")
-  end)
-  ns.VERSION = (ok and type(version) == "string") and version or "?"
+  local ok, v = false, nil
+  if C_AddOns and C_AddOns.GetAddOnMetadata then
+    ok, v = pcall(C_AddOns.GetAddOnMetadata, ADDON_NAME, "Version")
+  end
+  ns.VERSION = (ok and type(v) == "string" and v ~= "") and v or "?"
 end
 
 ns.defaults = {

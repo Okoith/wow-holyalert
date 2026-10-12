@@ -95,14 +95,19 @@ local function buildOptions()
     type = "group",
     name = "HolyAlert",
     args = {
+      -- Addon-Version oben im Menü (ns.VERSION, zur Laufzeit aus der TOC gelesen)
+      version = {
+        type = "description", order = 0, width = "full",
+        name = function() return L["OPT_VERSION"]:format(ns.VERSION) .. "\n" end,
+      },
       -- Hinweis oben (SPEC 3.3 und 5): inaktiv auf anderen Klassen/Specs, sonst Statuszeile
       inactive = {
-        type = "description", order = 0, fontSize = "medium", width = "full",
+        type = "description", order = 1, fontSize = "medium", width = "full",
         name = function() return "|cffff8020" .. L["NOT_AVAILABLE"] .. "|r\n" end,
         hidden = function() return ns.Alerts.active end,
       },
       status = {
-        type = "description", order = 1, fontSize = "medium", width = "full",
+        type = "description", order = 2, fontSize = "medium", width = "full",
         name = function()
           local A = ns.Alerts
           return L["OPT_STATUS"]:format(tostring(A.specName or "?"), tostring(A.specID or "?")) .. "\n"

@@ -2,7 +2,7 @@
 
 <p align="center"><img src="docs/holy-alert-logo.png" alt="HolyAlert logo" width="256"></p>
 
-World of Warcraft addon (Retail 12.1, Midnight) for **Retribution Paladins**. When the set bonus effect **Divine Arbiter** makes an ability glow, HolyAlert plays a sound:
+World of Warcraft addon (Retail 12.1 and 12.1.5, Midnight) for **Retribution Paladins**. When the set bonus effect **Divine Arbiter** makes an ability glow, HolyAlert plays a sound:
 
 - **Divine Storm** – use it now (lights up after you cast Final Verdict), and
 - **Final Verdict** – use it now (lights up after you cast Divine Storm).

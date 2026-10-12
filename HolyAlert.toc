@@ -1,4 +1,4 @@
-## Interface: 120100
+## Interface: 120100, 120105
 ## Title: HolyAlert
 ## Notes: Plays a sound when Divine Arbiter makes Divine Storm or Final Verdict glow, optionally when Blade of Justice glows after a reset (Retribution Paladin).
 ## Notes-deDE: Spielt einen Sound, sobald Göttlicher Richter Göttlicher Sturm oder Letztes Urteil aufleuchten lässt, optional auch bei Klinge der Gerechtigkeit nach einem Proc (Paladin Vergeltung).
